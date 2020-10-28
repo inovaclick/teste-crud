@@ -31,21 +31,21 @@ User.getAll = result => {
     });
 };
 
-// User.getByName = (userName, result) => {
-//     sql.query("SELECT * FROM users WHERE name = ?", userName, (err, res) => {
-//         if(err) {
-//             console.log("error: ", err);
-//             result(err, null);
-//         } else {
-//             if(res.length) {
-//                 console.log("found user: ", res[0]);
-//                 result(null, res[0]);
-//             } else {
-//                 result({ kind: "not found"}, null);
-//             }
-//         }
-//     });
-// };
+User.getByName = (userName, result) => {
+    sql.query("SELECT * FROM users WHERE name LIKE ?\"%\"", userName, (err, res) => {
+        if(err) {
+            console.log("error: ", err);
+            result(err, null);
+        } else {
+            if(res.length) {
+                console.log("found users: ", res);
+                result(null, res);
+            } else {
+                result({ kind: "not found"}, null);
+            }
+        }
+    });
+};
 
 User.findById = (id, result) => {
     sql.query("SELECT * FROM users WHERE id = ?", id, (err, res) => {
@@ -72,8 +72,8 @@ User.updateById = (id, user, result) => {
             if(res.affectedRows == 0) {
                 result({ kind: "not found"}, null);
             } else {
-                console.log("updated user: ", { id: id, ...User });
-                result(null, { id: id, ...User });
+                console.log("updated user: ", { id: id, ...user });
+                result(null, { id: id, ...user });
             }
         }
     });

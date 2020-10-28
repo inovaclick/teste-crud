@@ -21,17 +21,35 @@ exports.create = (req, res) => {
     })
 };
 
-exports.findAll = (req, res) => {
-    User.getAll((err, data) => {
-        if(err){
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving users"
-            });
-        }
-        else {
-            res.send(data);
-        }
-    });
+exports.findUsers = (req, res) => {
+    if(req.query.name) {
+        User.getByName(req.query.name, (err, data) => {
+            if(err) {
+                if(err.kind === "not found") {
+                    res.status(404).send({
+                        message: `Not found user with name ${req.query.name}`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: `Error retrieving users with name ${req.query.name}`
+                    });
+                }
+            } else {
+                res.send(data);
+            }
+        });
+    } else {
+        User.getAll((err, data) => {
+            if(err){
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving users"
+                });
+            }
+            else {
+                res.send(data);
+            }
+        });
+    }
 };
 
 exports.findOne = (req, res) => {
@@ -71,11 +89,6 @@ exports.delete = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    if(!req.body) {
-        res.status(400).send({
-            message: "Content can't be empty"
-        });
-    }
     
     User.updateById(req.params.id, new User(req.body), (err, data) => {
         if(err) {
