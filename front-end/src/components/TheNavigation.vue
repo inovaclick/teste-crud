@@ -10,9 +10,7 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
@@ -37,5 +35,4 @@ export default {
 #nav .link.router-link-exact-active {
   color: #42b983;
 }
-
 </style>

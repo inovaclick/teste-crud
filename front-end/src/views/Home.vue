@@ -1,15 +1,19 @@
 <template>
-  <div class="home">
-    HOME
+  <div>
+    <h1>Bem vindo ao sistema crud (create, read, update, delete)!</h1>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 
 export default {
   name: "Home",
-  components: {
-  }
+  components: {}
 };
 </script>
+
+<style>
+  h1 {
+    color: black;
+  }
+</style>

@@ -29,7 +29,7 @@ const routes = [
     path: "/deleteUser",
     name: "Delete",
     component: () => import(/*webpackChunckName: Delete */ "../views/Delete")
-  } 
+  }
 ];
 
 const router = new VueRouter({
