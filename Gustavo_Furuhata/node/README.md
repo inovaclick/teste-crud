@@ -10,6 +10,7 @@
 
 - Acesse a pasta mysql_dump e rode o comando:
   - docker-compose up -d
+- Com o container do MySQL rodando, crie o banco chamado crud. Para se conectar ao banco através de uma interface gráfica utilize o username e senha como root
 - Na raiz do projeto rode os seguintes comandos:
   - yarn
   - yarn typeorm migration:run
