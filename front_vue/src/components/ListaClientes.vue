@@ -3,9 +3,13 @@
   <div>
     <EditarCliente v-if="clienteEditando" :cliente="clienteEditando" 
     @clienteAtualizado="atualizarClienteEditado" @fecharEdicao="fecharEdicao"/>
-    <div class="header-form lista">
-        <h2>Lista de Clientes</h2>
-        <button class="atualizar" @click="atualizarLista"> Atualizar tabela</button>
+    <div class="headerlista">
+            <h2>Lista de Clientes</h2>
+            <div class="search-group">
+                <input type="text" v-model="codigoBusca" placeholder="Código do cliente">
+                <button class="atualizar" @click="buscarCliente">Buscar</button>
+            </div>
+            <button class="atualizar" @click="atualizarLista"> Listar todos </button>
     </div>
     <table class="table">
       <thead>
@@ -40,6 +44,7 @@ export default {
   data() {
     return {
       clientes: [],
+      codigoBusca: '',
       clienteEditando: null,
     };
   },
@@ -49,12 +54,31 @@ export default {
   },
 
   methods: {
+    buscarCliente() {
+        if (this.codigoBusca) {
+            axios.get(`http://localhost:3000/api/cliente/${this.codigoBusca}`)
+                .then(response => {
+                    if (response.data.result) {
+                        this.clientes = [response.data.result];
+                        console.log(response.data);;
+                    } else {
+                        this.clientes = [];
+                        console.log('Cliente não encontrado.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar cliente:', error);
+                });
+        } else {
+            this.listarClientes();
+        }
+    },
+
 
     listarClientes() {
       axios.get('http://localhost:3000/api/clientes')
         .then(response => {
           this.clientes = response.data.result;
-          this.listarClientes();
         })
         .catch(error => {
           console.error('Erro ao listar clientes:', error);
@@ -71,6 +95,7 @@ export default {
         this.clientes[index] = clienteAtualizado;
       }
       this.clienteEditando = null;
+      this.listarClientes();
     },
 
     fecharEdicao() {
@@ -79,6 +104,7 @@ export default {
 
     atualizarLista() {
         this.$emit('atualizarLista');
+        this.listarClientes();
     },
 
     excluirCliente(codigo) {
@@ -187,5 +213,31 @@ tbody {
 body button {
     font-weight: 500;
     color: rgb(133, 31, 31);
+}
+
+.search-group {
+    display: flex; 
+}
+
+.headerlista h2{
+    font-size: 3rem;
+    margin: 0;
+    
+    
+}
+
+.headerlista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.search-group input {
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+}
+.atualizar {
+    max-width: 406px;
 }
 </style>
